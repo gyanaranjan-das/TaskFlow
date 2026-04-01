@@ -55,6 +55,29 @@ const initCronJobs = () => {
     }
   });
 
+  // Auto-close overdue tasks - runs daily at 1:00 AM
+  const autoCloseOverdue = new CronJob('0 1 * * *', async () => {
+    try {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const result = await Task.updateMany(
+        {
+          dueDate: { $lt: today, $ne: null },
+          status: { $nin: ['done', 'cancelled'] },
+          deletedAt: null,
+        },
+        { $set: { status: 'cancelled' } }
+      );
+
+      if (result.modifiedCount > 0) {
+        logger.info(`🔒 Auto-closed ${result.modifiedCount} overdue tasks`);
+      }
+    } catch (error) {
+      logger.error(`Cron (auto close overdue) failed: ${error.message}`);
+    }
+  });
+
   // Cleanup expired refresh tokens - runs daily at midnight
   const tokenCleanup = new CronJob('0 0 * * *', async () => {
     try {
@@ -68,6 +91,7 @@ const initCronJobs = () => {
   });
 
   dueDateReminder.start();
+  autoCloseOverdue.start();
   tokenCleanup.start();
 
   logger.info('⏰ Cron jobs initialized');

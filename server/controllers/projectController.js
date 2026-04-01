@@ -234,7 +234,7 @@ export const changeMemberRole = asyncHandler(async (req, res) => {
   }
 
   const member = project.members.find(
-    (m) => m.user.toString() === req.params.userId
+    (m) => m.user.toString() === req.params.uid
   );
 
   if (!member) {

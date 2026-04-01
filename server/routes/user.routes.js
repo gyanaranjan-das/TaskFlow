@@ -12,10 +12,10 @@ const router = Router();
 
 router.use(protect);
 
-router.get('/profile', getProfile);
-router.patch('/profile', validate(updateProfileSchema), updateProfile);
-router.post('/avatar', uploadAvatarMiddleware, uploadAvatar);
-router.patch('/password', validate(changePasswordSchema), changePassword);
+router.get('/me', getProfile);
+router.patch('/me', validate(updateProfileSchema), updateProfile);
+router.post('/me/avatar', uploadAvatarMiddleware, uploadAvatar);
+router.patch('/me/password', validate(changePasswordSchema), changePassword);
 router.get('/search', searchUsers);
 
 export default router;

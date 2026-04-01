@@ -21,8 +21,8 @@ router.patch('/:id', validate(updateProjectSchema), updateProject);
 router.delete('/:id', deleteProject);
 
 // Members
-router.post('/:id/members', validate(inviteMemberSchema), inviteMember);
-router.patch('/:id/members/:userId', validate(changeMemberRoleSchema), changeMemberRole);
+router.post('/:id/invite', validate(inviteMemberSchema), inviteMember);
+router.patch('/:id/member/:uid/role', validate(changeMemberRoleSchema), changeMemberRole);
 router.delete('/:id/members/:userId', removeMember);
 
 export default router;

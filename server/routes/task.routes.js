@@ -4,13 +4,14 @@ import {
   restoreTask, bulkUpdateTasks, reorderTasks,
   addSubtask, toggleSubtask, deleteSubtask,
   addAttachment, deleteAttachment, getTaskStats,
+  changeTaskStatus, assignTaskUsers,
 } from '../controllers/taskController.js';
 import { getComments, createComment } from '../controllers/commentController.js';
 import { protect } from '../middleware/auth.js';
 import validate from '../middleware/validate.js';
 import {
-  createTaskSchema, updateTaskSchema, bulkUpdateSchema,
   addSubtaskSchema, reorderTasksSchema, taskQuerySchema,
+  changeTaskStatusSchema, assignTaskSchema,
 } from '../validations/task.schema.js';
 import { createCommentSchema } from '../validations/project.schema.js';
 import { uploadSingle } from '../middleware/upload.js';
@@ -34,6 +35,10 @@ router.get('/:id', getTask);
 router.patch('/:id', validate(updateTaskSchema), updateTask);
 router.delete('/:id', deleteTask);
 router.patch('/:id/restore', restoreTask);
+
+// Specific fields update
+router.patch('/:id/status', validate(changeTaskStatusSchema), changeTaskStatus);
+router.patch('/:id/assign', validate(assignTaskSchema), assignTaskUsers);
 
 // Subtasks
 router.post('/:id/subtasks', validate(addSubtaskSchema), addSubtask);

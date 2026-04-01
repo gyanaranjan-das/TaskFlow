@@ -72,3 +72,12 @@ export const taskQuerySchema = z.object({
   dueDateTo: z.string().optional(),
   sort: z.string().optional().default('-createdAt'),
 });
+
+export const changeTaskStatusSchema = z.object({
+  status: z.enum(STATUS_VALUES, { required_error: 'Status is required' }),
+});
+
+export const assignTaskSchema = z.object({
+  assignees: z.array(z.string()),
+});
+

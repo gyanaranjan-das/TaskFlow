@@ -439,3 +439,63 @@ export const getTaskStats = asyncHandler(async (req, res) => {
     },
   });
 });
+
+/**
+ * @desc    Change Task Status only
+ * @route   PATCH /api/tasks/:id/status
+ * @access  Private
+ */
+export const changeTaskStatus = asyncHandler(async (req, res) => {
+  const { status } = req.body;
+  const task = await Task.findOne({ _id: req.params.id, deletedAt: null });
+
+  if (!task) {
+    throw new AppError('Task not found.', 404);
+  }
+
+  task.status = status;
+  await task.save();
+
+  const populated = await Task.findById(task._id)
+    .populate('creator', 'name email avatar')
+    .populate('assignees', 'name email avatar')
+    .populate('labels', 'name color')
+    .populate('project', 'name color')
+    .lean();
+
+  res.status(200).json({
+    success: true,
+    data: populated,
+    message: 'Task status updated.',
+  });
+});
+
+/**
+ * @desc    Assign/Unassign users to task
+ * @route   PATCH /api/tasks/:id/assign
+ * @access  Private
+ */
+export const assignTaskUsers = asyncHandler(async (req, res) => {
+  const { assignees } = req.body;
+  const task = await Task.findOne({ _id: req.params.id, deletedAt: null });
+
+  if (!task) {
+    throw new AppError('Task not found.', 404);
+  }
+
+  task.assignees = assignees;
+  await task.save();
+
+  const populated = await Task.findById(task._id)
+    .populate('creator', 'name email avatar')
+    .populate('assignees', 'name email avatar')
+    .populate('labels', 'name color')
+    .populate('project', 'name color')
+    .lean();
+
+  res.status(200).json({
+    success: true,
+    data: populated,
+    message: 'Task assignees updated.',
+  });
+});
