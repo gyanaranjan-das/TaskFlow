@@ -10,6 +10,7 @@ import { getComments, createComment } from '../controllers/commentController.js'
 import { protect } from '../middleware/auth.js';
 import validate from '../middleware/validate.js';
 import {
+  createTaskSchema, updateTaskSchema, bulkUpdateSchema,
   addSubtaskSchema, reorderTasksSchema, taskQuerySchema,
   changeTaskStatusSchema, assignTaskSchema,
 } from '../validations/task.schema.js';
