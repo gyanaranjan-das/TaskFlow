@@ -12,6 +12,8 @@ import Skeleton from '../ui/Skeleton';
 import { toast } from '../ui/Toast';
 import { cn, formatDate, timeAgo } from '../../utils/helpers';
 import { STATUS_LABELS, PRIORITY_LABELS, STATUS, PRIORITY } from '../../utils/constants';
+import TaskComments from './TaskComments';
+import TaskAttachments from './TaskAttachments';
 
 const drawerVariants = {
   hidden: { x: '100%' },
@@ -250,53 +252,11 @@ const TaskDetailDrawer = () => {
                     </form>
                   </div>
 
+                  {/* Attachments */}
+                  <TaskAttachments task={task} />
+
                   {/* Comments */}
-                  <div>
-                    <h4 className="flex items-center gap-2 text-sm font-semibold text-surface-900 dark:text-white mb-3">
-                      <MessageSquare className="w-4 h-4" />
-                      Comments ({comments.length})
-                    </h4>
-
-                    <div className="space-y-4">
-                      {comments.map((comment) => (
-                        <div key={comment._id} className="flex gap-3">
-                          <Avatar
-                            src={comment.author?.avatar?.url}
-                            name={comment.author?.name}
-                            size="sm"
-                          />
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium text-surface-900 dark:text-white">
-                                {comment.author?.name}
-                              </span>
-                              <span className="text-xs text-surface-400">
-                                {timeAgo(comment.createdAt)}
-                              </span>
-                              {comment.isEdited && (
-                                <span className="text-xs text-surface-400">(edited)</span>
-                              )}
-                            </div>
-                            <p className="text-sm text-surface-600 dark:text-surface-400 mt-1">
-                              {comment.content}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <form onSubmit={handleAddComment} className="mt-4 flex gap-2">
-                      <input
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                        placeholder="Add a comment..."
-                        className="input-field text-sm flex-1"
-                      />
-                      <Button type="submit" size="sm" disabled={!newComment.trim()}>
-                        Send
-                      </Button>
-                    </form>
-                  </div>
+                  <TaskComments taskId={task._id} />
                 </>
               ) : null}
             </div>

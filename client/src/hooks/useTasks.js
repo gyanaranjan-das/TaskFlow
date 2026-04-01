@@ -148,3 +148,31 @@ export function useBulkUpdateTasks() {
     },
   });
 }
+
+/**
+ * Hook to add an attachment
+ */
+export function useAddAttachment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ taskId, file }) => tasksApi.addAttachment(taskId, file),
+    onSuccess: (data, { taskId }) => {
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+}
+
+/**
+ * Hook to delete an attachment
+ */
+export function useDeleteAttachment() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ taskId, attachmentId }) => tasksApi.deleteAttachment(taskId, attachmentId),
+    onSuccess: (data, { taskId }) => {
+      queryClient.invalidateQueries({ queryKey: ['task', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+}

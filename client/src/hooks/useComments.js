@@ -22,8 +22,8 @@ export function useCreateComment() {
 export function useDeleteComment() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: commentsApi.deleteComment,
-    onSuccess: () => {
+    mutationFn: ({ commentId }) => commentsApi.deleteComment(commentId),
+    onSuccess: (data, { taskId }) => {
       queryClient.invalidateQueries({ queryKey: ['comments'] });
     },
   });
