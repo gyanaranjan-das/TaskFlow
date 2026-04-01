@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useSearchParams, Link } from 'react-router-dom';
-import { useVerifyEmail } from '../../hooks/useAuth';
+import { useVerifyEmail } from '../hooks/useAuth';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 
 const VerifyEmail = () => {

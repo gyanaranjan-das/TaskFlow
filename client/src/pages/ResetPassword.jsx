@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useSearchParams, Link } from 'react-router-dom';
-import Input from '../../components/ui/Input';
-import Button from '../../components/ui/Button';
-import { useResetPassword } from '../../hooks/useAuth';
-import { toast } from '../../components/ui/Toast';
+import Input from '../components/ui/Input';
+import Button from '../components/ui/Button';
+import { useResetPassword } from '../hooks/useAuth';
+import { toast } from '../components/ui/Toast';
 import { useState } from 'react';
 
 const schema = z.object({

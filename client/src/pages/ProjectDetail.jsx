@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
 import { useParams } from 'react-router-dom';
-import { useProject } from '../../hooks/useProjects';
-import { useTasks } from '../../hooks/useTasks';
-import KanbanBoard from '../../components/tasks/KanbanBoard';
-import TaskFilters from '../../components/tasks/TaskFilters';
-import Avatar from '../../components/ui/Avatar';
-import Badge from '../../components/ui/Badge';
-import Skeleton from '../../components/ui/Skeleton';
+import { useProject } from '../hooks/useProjects';
+import { useTasks } from '../hooks/useTasks';
+import KanbanBoard from '../components/tasks/KanbanBoard';
+import TaskFilters from '../components/tasks/TaskFilters';
+import Avatar from '../components/ui/Avatar';
+import Badge from '../components/ui/Badge';
+import Skeleton from '../components/ui/Skeleton';
 import { useState } from 'react';
 
 const ProjectDetail = () => {

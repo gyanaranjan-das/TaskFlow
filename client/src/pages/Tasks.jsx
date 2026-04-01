@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { LayoutGrid, List, Plus } from 'lucide-react';
-import { useTasks } from '../../hooks/useTasks';
-import KanbanBoard from '../../components/tasks/KanbanBoard';
-import TaskList from '../../components/tasks/TaskList';
-import TaskFilters from '../../components/tasks/TaskFilters';
-import Button from '../../components/ui/Button';
-import { useUIStore } from '../../store/uiStore';
-import { cn } from '../../utils/helpers';
+import { useTasks } from '../hooks/useTasks';
+import KanbanBoard from '../components/tasks/KanbanBoard';
+import TaskList from '../components/tasks/TaskList';
+import TaskFilters from '../components/tasks/TaskFilters';
+import Button from '../components/ui/Button';
+import { useUIStore } from '../store/uiStore';
+import { cn } from '../utils/helpers';
 
 const pageVariants = {
   hidden: { opacity: 0, y: 16 },

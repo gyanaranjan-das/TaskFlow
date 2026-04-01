@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import LoginForm from '../../components/auth/LoginForm';
+import LoginForm from '../components/auth/LoginForm';
 
 const pageVariants = {
   hidden: { opacity: 0 },

@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
 import { CheckCircle, Clock, AlertTriangle, TrendingUp } from 'lucide-react';
-import { useTaskStats, useTasks } from '../../hooks/useTasks';
-import { useProjects } from '../../hooks/useProjects';
-import { StatCardSkeleton, TaskCardSkeleton } from '../../components/ui/Skeleton';
-import Card from '../../components/ui/Card';
-import TaskCard from '../../components/tasks/TaskCard';
-import EmptyState from '../../components/shared/EmptyState';
-import { useUIStore } from '../../store/uiStore';
-import { cn } from '../../utils/helpers';
+import { useTaskStats, useTasks } from '../hooks/useTasks';
+import { useProjects } from '../hooks/useProjects';
+import { StatCardSkeleton, TaskCardSkeleton } from '../components/ui/Skeleton';
+import Card from '../components/ui/Card';
+import TaskCard from '../components/tasks/TaskCard';
+import EmptyState from '../components/shared/EmptyState';
+import { useUIStore } from '../store/uiStore';
+import { cn } from '../utils/helpers';
 
 const pageVariants = {
   hidden: { opacity: 0, y: 16 },
