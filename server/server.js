@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import mongoSanitize from 'express-mongo-sanitize';
 import hpp from 'hpp';
+import xss from 'xss-clean';
 import morgan from 'morgan';
 
 import connectDB from './config/db.js';
@@ -37,6 +38,7 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(mongoSanitize());
+app.use(xss());
 app.use(hpp());
 app.use(globalLimiter);
 
