@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Mail, Lock, Loader2 } from 'lucide-react';
 import Input from '../ui/Input';
@@ -14,10 +14,8 @@ const loginSchema = z.object({
   password: z.string().min(1, 'Password is required'),
 });
 
-/**
- * Login form with validation
- */
 const LoginForm = () => {
+  const navigate = useNavigate();
   const loginMutation = useLogin();
 
   const {
@@ -30,6 +28,10 @@ const LoginForm = () => {
 
   const onSubmit = (data) => {
     loginMutation.mutate(data, {
+      onSuccess: () => {
+        toast.success('Login successful! Welcome back.');
+        navigate('/dashboard');
+      },
       onError: (error) => {
         toast.error(error.response?.data?.message || 'Login failed');
       },

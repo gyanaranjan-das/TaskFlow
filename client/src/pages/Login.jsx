@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion';
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAuthStore } from '../store/authStore';
 import LoginForm from '../components/auth/LoginForm';
 
 const pageVariants = {
@@ -10,6 +12,12 @@ const pageVariants = {
  * Login page
  */
 const Login = () => {
+  const { user } = useAuthStore();
+
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <motion.div
       variants={pageVariants}

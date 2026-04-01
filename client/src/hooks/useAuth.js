@@ -49,8 +49,13 @@ export function useLogin() {
  * Register mutation hook
  */
 export function useRegister() {
+  const { login } = useAuthStore();
+
   return useMutation({
     mutationFn: authApi.registerUser,
+    onSuccess: (data) => {
+      login(data.data.user, data.data.accessToken);
+    },
   });
 }
 

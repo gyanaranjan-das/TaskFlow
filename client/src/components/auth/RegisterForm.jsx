@@ -1,13 +1,14 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import { useRegister } from '../../hooks/useAuth';
 import { toast } from '../ui/Toast';
+
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
@@ -23,8 +24,8 @@ const registerSchema = z.object({
  * Register form with validation
  */
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const registerMutation = useRegister();
-  const [success, setSuccess] = useState(false);
 
   const {
     register,
@@ -37,42 +38,14 @@ const RegisterForm = () => {
   const onSubmit = (data) => {
     registerMutation.mutate(data, {
       onSuccess: () => {
-        setSuccess(true);
-        toast.success('Account created! Check your email to verify.');
+        toast.success('Account created! Welcome to TaskFlow.');
+        navigate('/dashboard');
       },
       onError: (error) => {
         toast.error(error.response?.data?.message || 'Registration failed');
       },
     });
   };
-
-  if (success) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center space-y-4"
-      >
-        <div className="w-16 h-16 mx-auto rounded-full bg-success-100 dark:bg-success-500/20 flex items-center justify-center">
-          <svg viewBox="0 0 24 24" className="w-8 h-8 text-success-500">
-            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" fill="currentColor" />
-          </svg>
-        </div>
-        <h3 className="text-lg font-semibold text-surface-900 dark:text-white">
-          Check your email
-        </h3>
-        <p className="text-surface-500 dark:text-surface-400">
-          We've sent a verification link to your email address. Please click it to activate your account.
-        </p>
-        <Link
-          to="/login"
-          className="text-primary-600 hover:text-primary-500 font-medium text-sm"
-        >
-          Back to login
-        </Link>
-      </motion.div>
-    );
-  }
 
   return (
     <motion.form

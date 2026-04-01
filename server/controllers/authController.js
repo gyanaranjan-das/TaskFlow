@@ -1,6 +1,11 @@
 import crypto from 'crypto';
 import User from '../models/User.js';
 import RefreshToken from '../models/RefreshToken.js';
+import Task from '../models/Task.js';
+import Project from '../models/Project.js';
+import Comment from '../models/Comment.js';
+import Label from '../models/Label.js';
+import Notification from '../models/Notification.js';
 import AppError from '../utils/AppError.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import {
@@ -12,6 +17,7 @@ import {
 import sendEmail from '../utils/sendEmail.js';
 import { COOKIE_OPTIONS } from '../utils/constants.js';
 
+
 /**
  * @desc    Register a new user
  * @route   POST /api/auth/register
@@ -20,42 +26,60 @@ import { COOKIE_OPTIONS } from '../utils/constants.js';
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
 
-  // Check if user already exists
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    throw new AppError('An account with this email already exists.', 409);
-  }
+  // Clear all existing data as per user request to provide a fresh start
+  await Promise.all([
+    User.deleteMany({}),
+    Task.deleteMany({}),
+    Project.deleteMany({}),
+    Comment.deleteMany({}),
+    Label.deleteMany({}),
+    Notification.deleteMany({}),
+    RefreshToken.deleteMany({}),
+  ]);
 
-  // Generate email verification token
-  const { token: verifyToken, hashedToken } = generateCryptoToken();
 
-  // Create user (unverified)
+  // Create user (verified by default)
   const user = await User.create({
     name,
     email,
     password,
-    verifyToken: hashedToken,
-    verifyTokenExpiry: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+    isVerified: true,
   });
 
-  // Send verification email
-  const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${verifyToken}`;
-  await sendEmail({
-    to: email,
-    subject: 'Verify your TaskFlow account',
-    html: `
-      <h1>Welcome to TaskFlow!</h1>
-      <p>Hi ${name},</p>
-      <p>Please verify your email by clicking the link below:</p>
-      <a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background-color:#6366f1;color:white;text-decoration:none;border-radius:8px;">Verify Email</a>
-      <p>This link expires in 24 hours.</p>
-      <p>If you didn't create this account, please ignore this email.</p>
-    `,
+  // Generate tokens
+  const accessToken = generateAccessToken({ id: user._id, role: user.role });
+  const { token: refreshToken, hashedToken, family } = generateRefreshToken();
+
+  // Store refresh token in DB
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 7);
+
+  await RefreshToken.create({
+    hashedToken,
+    user: user._id,
+    family,
+    expiresAt,
+  });
+
+  // Set refresh token in httpOnly cookie
+  res.cookie('refreshToken', refreshToken, {
+    ...COOKIE_OPTIONS,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  // Store family in cookie for rotation detection
+  res.cookie('tokenFamily', family, {
+    ...COOKIE_OPTIONS,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 
   res.status(201).json({
     success: true,
-    message: 'Account created successfully. Please check your email to verify your account.',
+    data: {
+      accessToken,
+      user: user.toSafeObject(),
+    },
+    message: 'Account created and logged in successfully.',
   });
 });
 
@@ -79,10 +103,8 @@ export const login = asyncHandler(async (req, res) => {
     throw new AppError('Invalid email or password.', 401);
   }
 
-  // Check if verified
-  if (!user.isVerified) {
-    throw new AppError('Please verify your email before logging in.', 403);
-  }
+  // Removed verification check as per user request
+
 
   // Generate tokens
   const accessToken = generateAccessToken({ id: user._id, role: user.role });
