@@ -21,8 +21,10 @@ const priorityBorders = {
  * Task card component for kanban and list views
  */
 const TaskCard = ({ task, isDragging, provided }) => {
-  const { openDrawer } = useUIStore();
+  const { openDrawer, selectedTasks, toggleTaskSelection } = useUIStore();
   const deleteMutation = useDeleteTask();
+
+  const isSelected = selectedTasks.includes(task._id);
 
   const subtaskProgress = task.subtasks?.length
     ? Math.round((task.subtasks.filter((s) => s.completed).length / task.subtasks.length) * 100)
@@ -42,12 +44,31 @@ const TaskCard = ({ task, isDragging, provided }) => {
       {...provided?.dragHandleProps}
       whileHover={{ y: -2, boxShadow: '0 8px 25px -5px rgba(0,0,0,0.1)' }}
       className={cn(
-        'bg-white dark:bg-surface-800 rounded-xl border border-surface-200 dark:border-surface-700 p-4 cursor-pointer border-l-[3px] transition-all duration-200',
+        'group relative bg-white dark:bg-surface-800 rounded-xl border border-surface-200 dark:border-surface-700 p-4 cursor-pointer border-l-[3px] transition-all duration-200',
         priorityBorders[task.priority],
-        isDragging && 'shadow-2xl rotate-[2deg] scale-105'
+        isDragging && 'shadow-2xl rotate-[2deg] scale-105',
+        isSelected && 'ring-2 ring-primary-500 border-transparent dark:border-transparent'
       )}
       onClick={() => openDrawer(task._id)}
     >
+      {/* Checkbox for bulk actions */}
+      <div 
+        className={cn(
+          "absolute -left-3 -top-3 z-10 p-1 bg-white dark:bg-surface-800 rounded-full shadow-sm border border-surface-200 dark:border-surface-700 transition-opacity",
+          isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+        )}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleTaskSelection(task._id);
+        }}
+      >
+        <div className={cn(
+          "w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors",
+          isSelected ? "bg-primary-500 border-primary-500 text-white" : "border-surface-300 dark:border-surface-600 hover:border-primary-400"
+        )}>
+          {isSelected && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-3 h-3"><polyline points="20 6 9 17 4 12"></polyline></svg>}
+        </div>
+      </div>
       {/* Header: labels + menu */}
       <div className="flex items-start justify-between gap-2 mb-2">
         <div className="flex flex-wrap gap-1">

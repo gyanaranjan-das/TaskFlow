@@ -33,4 +33,14 @@ export const useUIStore = create((set) => ({
     localStorage.setItem('taskflow_viewMode', mode);
     set({ viewMode: mode });
   },
+
+  // Multi-select for bulk actions
+  selectedTasks: [],
+  toggleTaskSelection: (taskId) => set((s) => {
+    if (s.selectedTasks.includes(taskId)) {
+      return { selectedTasks: s.selectedTasks.filter((id) => id !== taskId) };
+    }
+    return { selectedTasks: [...s.selectedTasks, taskId] };
+  }),
+  clearSelectedTasks: () => set({ selectedTasks: [] }),
 }));

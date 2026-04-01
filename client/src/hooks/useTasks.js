@@ -134,3 +134,17 @@ export function useToggleSubtask() {
     },
   });
 }
+
+/**
+ * Hook to bulk update tasks
+ */
+export function useBulkUpdateTasks() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ taskIds, update }) => tasksApi.bulkUpdateTasks(taskIds, update),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['taskStats'] });
+    },
+  });
+}

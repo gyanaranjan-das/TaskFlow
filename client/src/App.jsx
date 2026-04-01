@@ -2,6 +2,7 @@ import AppRouter from './router';
 import ToastContainer from './components/ui/Toast';
 import TaskDetailDrawer from './components/tasks/TaskDetailDrawer';
 import CreateTaskModal from './components/tasks/CreateTaskModal';
+import BulkActions from './components/tasks/BulkActions';
 import { useAuthInit } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
 
@@ -21,6 +22,7 @@ const App = () => {
       <AppRouter />
       <TaskDetailDrawer />
       <CreateTaskModal />
+      <BulkActions />
       <ToastContainer />
     </>
   );
